@@ -8,7 +8,9 @@ import * as movies from './controllers/movie'
 env.config()
 const app: Application = express()
 
+// Use json parser
 app.use(express.json())
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser())
 app.use(
     cors({
@@ -37,6 +39,8 @@ app.post("/api/v1/users/refresh_token", auth.refreshToken)
 app.get("/api/v1/movies", movies.getMovies);
 // New movie
 app.post("/api/v1/movies/create", movies.createMovie);
+// Upload movie file
+app.post("/api/v1/movies/upload", movies.uploadEndpoint)
 // Get movie by id
 app.get("/api/v1/movies/get/:id", movies.getMovie);
 // Delete movie by id

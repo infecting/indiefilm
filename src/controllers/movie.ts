@@ -2,7 +2,48 @@ import {Request, Response} from 'express';
 import Movie from '../models/Movie';
 import { IMovie } from '../utils/types';
 import {ok, throwError} from '../utils/functions';
+import AWS from 'aws-sdk';
+import multer from 'multer';
+import multerS3 from 'multer-s3'
+import path from 'path'
+// AWS S3 settings
+AWS.config.loadFromPath(__dirname + '/config.json');
+const s3 = new AWS.S3()
 
+let date:string = ""
+
+var upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: "indiefilm101",
+      metadata: function (_req, file, cb) {
+        cb(null, {fieldName: file.fieldname});
+      },
+      key: function (_req, _file, cb) {
+        cb(null, date)
+      }
+    })
+  })
+const singleFileUpload = upload.single('file');
+
+export const movieUpload: any = (req:Request, res: Response) => {
+    date = Date.now().toString();
+    let downloadUri = `https://s3-us-east-2.amazonaws.com/indiefilm101/${date}`
+    return new Promise((resolve, reject) => {
+    return singleFileUpload(req, res, (err: any) => {
+        if(err) return reject(err);
+            return resolve(downloadUri)
+        })
+    })
+}
+
+export const uploadEndpoint = async(req:Request, res: Response):Promise<void> => {
+    movieUpload(req, res).then((uri: any) => {return ok(res, "downloadUri", uri)}).catch((e:any) => {
+        console.error(e)
+        return throwError(res, 500, e)
+    })
+    return;
+}
 
 // Creates movie
 export const createMovie = async(req:Request, res:Response) => {

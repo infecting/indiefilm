@@ -16,13 +16,15 @@ export let getUsers = async (req: Request, res: Response) => {
 
 export let register = async(req:Request, res:Response) => {
     try {
-        let userCheck: IUser = await User.findOne({username: req.body.username})
+        let userCheck: IUser = await User.findOne({email: req.body.email})
         if (userCheck) {
             throwError(res, 400, "USER EXISTS")
         }
         const hash:string = await argon2.hash(req.body.password)
-        const newUser: IUser = await User.create({
+        await User.create({
+            email: req.body.email,
             username: req.body.username,
+            profilePicture: req.body.profilePicture,
             password: hash
         })
         ok(res, "newUser", "USER REGISTERED")
@@ -33,8 +35,7 @@ export let register = async(req:Request, res:Response) => {
 
 export let login = async(req: Request, res: Response) => {
     try {
-        let userCheck: IUser = await User.findOne({username: req.body.username})
-        console.log(userCheck)
+        let userCheck: IUser = await User.findOne({email: req.body.email})
         let isValid = await argon2.verify(userCheck.password, req.body.password)
         if (isValid) {
             const token:string = sign({id: userCheck.id}, process.env.ACCESS_TOKEN_SECRET!, {
@@ -43,7 +44,6 @@ export let login = async(req: Request, res: Response) => {
             const cookie:string = sign({id: userCheck.id}, process.env.REFRESH_TOKEN_SECRET!, {
                 expiresIn: "7d"
             })
-            console.log("token")
             res.cookie("jid",cookie, {
                 httpOnly: true,
                 path: "/",
@@ -56,7 +56,6 @@ export let login = async(req: Request, res: Response) => {
             throwError(res, 403, "PASSWORD INCORRECT")
         }
     } catch(e) {
-        console.log(e.msg)
         throwError(res, 500, e)
     }
 }
