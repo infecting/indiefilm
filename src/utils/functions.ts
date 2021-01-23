@@ -31,7 +31,7 @@ export var throwError = async (res: Response, code: number, e: any) => {
 }
 
 export var connectDatabase = async () => {                                      
-    let uri = process.env.MONGO_URI!
+    let uri:string = process.env.MONGO_URI!
     try {                                                                       
         mongoose.connect(uri,
             {

@@ -10,12 +10,13 @@ import path from 'path'
 AWS.config.loadFromPath(__dirname + '/config.json');
 const s3 = new AWS.S3()
 
-let date:string = ""
+let date:string = "";
 
 var upload = multer({
     storage: multerS3({
       s3: s3,
       bucket: "indiefilm101",
+      contentType: multerS3.AUTO_CONTENT_TYPE,
       metadata: function (_req, file, cb) {
         cb(null, {fieldName: file.fieldname});
       },
@@ -27,8 +28,9 @@ var upload = multer({
 const singleFileUpload = upload.single('file');
 
 export const movieUpload: any = (req:Request, res: Response) => {
-    date = Date.now().toString();
+    date = Date.now().toString() + ".mp4"
     let downloadUri = `https://s3-us-east-2.amazonaws.com/indiefilm101/${date}`
+    console.log(downloadUri)
     return new Promise((resolve, reject) => {
     return singleFileUpload(req, res, (err: any) => {
         if(err) return reject(err);
@@ -38,7 +40,7 @@ export const movieUpload: any = (req:Request, res: Response) => {
 }
 
 export const uploadEndpoint = async(req:Request, res: Response):Promise<void> => {
-    movieUpload(req, res).then((uri: any) => {return ok(res, "downloadUri", uri)}).catch((e:any) => {
+    movieUpload(req, res).then((uri: string) => {return ok(res, "downloadUri", uri)}).catch((e:any) => {
         console.error(e)
         return throwError(res, 500, e)
     })
@@ -49,7 +51,7 @@ export const uploadEndpoint = async(req:Request, res: Response):Promise<void> =>
 export const createMovie = async(req:Request, res:Response) => {
     try {
         // If one of params not sent send back 400 response
-        if (!req.body.userId || !req.body.title || !req.body.description || !req.body.url || !req.body.coverPicture || !req.body.score) {
+        if (!req.body.userId || !req.body.title || !req.body.description || !req.body.url || !req.body.coverPicture) {
             throwError(res, 400, "Missing parameter.")
         }
         // Create new movie in database
@@ -58,8 +60,7 @@ export const createMovie = async(req:Request, res:Response) => {
             title: req.body.title,
             description: req.body.description,
             url: req.body.url,
-            coverPicture: req.body.coverPicture,
-            score: req.body.score
+            coverPicture: req.body.coverPicture
         })
         // Send back json response
         ok(res, "newMovie", newMovie)
@@ -72,7 +73,7 @@ export const createMovie = async(req:Request, res:Response) => {
 export const getMovies = async(_req:Request, res:Response) => {
     try {
         // Find all Movies
-        const movies: IMovie = Movie.find({})
+        const movies: IMovie = await Movie.find()
         ok(res, "movies", movies)
     } catch(e) {
         throwError(res, 500, e)
