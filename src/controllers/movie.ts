@@ -29,7 +29,7 @@ const singleFileUpload = upload.single('file');
 
 export const movieUpload: any = (req:Request, res: Response) => {
     date = Date.now().toString() + ".mp4"
-    let downloadUri = `https://s3-us-east-2.amazonaws.com/indiefilm101/${date}`
+    let downloadUri = `http://d2fmpilrm1w0l2.cloudfront.net/indiefilm101/${date}`
     console.log(downloadUri)
     return new Promise((resolve, reject) => {
     return singleFileUpload(req, res, (err: any) => {
@@ -83,7 +83,7 @@ export const getMovies = async(_req:Request, res:Response) => {
 // Delete movie by ID specified in params
 export const deleteMovie = async(req: Request, res:Response) => {
     try {
-        const deletedMovie:IMovie = Movie.findByIdAndDelete(req.params.id)
+        const deletedMovie:IMovie = await Movie.findByIdAndDelete(req.params.id)
         ok(res, "deletedMovie", deletedMovie)
     } catch(e) {
         throwError(res, 500, e)

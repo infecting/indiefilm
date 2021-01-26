@@ -44,7 +44,7 @@ app.post("/api/v1/movies/upload", movies.uploadEndpoint)
 // Get movie by id
 app.get("/api/v1/movies/get/:id", movies.getMovie);
 // Delete movie by id
-app.delete("/api/v1/movies/delete", movies.deleteMovie);
+app.delete("/api/v1/movies/delete/:id", movies.deleteMovie);
 // Update movie
 app.patch("/api/v1/movies/update/:id")
 
