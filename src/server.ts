@@ -3,6 +3,7 @@ import * as env from 'dotenv'
 import cookieParser from 'cookie-parser';
 import { connectDatabase } from './utils/functions';
 import cors from 'cors';
+import {__prod__} from './constants'
 import * as auth from './controllers/authentication'
 import * as movies from './controllers/movie'
 env.config()
@@ -12,6 +13,7 @@ const app: Application = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser())
+app.set("proxy", 1)
 app.use(
     cors({
         credentials: true,

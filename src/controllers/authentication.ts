@@ -4,6 +4,7 @@ import { IUser } from '../utils/types';
 import {auth, ok, throwError} from '../utils/functions'
 import * as argon2 from 'argon2'
 import {sign, verify} from 'jsonwebtoken';
+import {__prod__} from '../constants'
 
 export let getUsers = async (req: Request, res: Response) => {
     try {
@@ -47,8 +48,8 @@ export let login = async(req: Request, res: Response) => {
             res.cookie("jid",cookie, {
                 httpOnly: true,
                 path: "/",
-                // domain: '.api.parotta.xyz',
-                // secure: true,
+                domain: __prod__ ? ".api.indiefilms.surf": undefined,
+                secure: __prod__,
                 maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
             })
             auth(res, token, userCheck)
