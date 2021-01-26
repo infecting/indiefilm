@@ -9,12 +9,14 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY yarn.lock ./
 
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
+RUN yarn
+
 
 # Bundle app source
 COPY . .
 
+RUN yarn build
+
 EXPOSE 8080
-CMD [ "node", "server.js" ]
+CMD [ "node", "dist/server.js" ]
+USER node
