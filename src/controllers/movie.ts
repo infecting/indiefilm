@@ -5,10 +5,13 @@ import {ok, throwError} from '../utils/functions';
 import AWS from 'aws-sdk';
 import multer from 'multer';
 import multerS3 from 'multer-s3'
-import path from 'path'
+import * as env from 'dotenv'
+env.config()
 // AWS S3 settings
-AWS.config.loadFromPath(__dirname + '/config.json');
-const s3 = new AWS.S3()
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+})
 
 let date:string = "";
 
