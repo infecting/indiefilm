@@ -45,7 +45,7 @@ export const movieUpload: any = (req:Request, res: Response) => {
 export const uploadEndpoint = async(req:Request, res: Response):Promise<void> => {
     movieUpload(req, res).then((uri: string) => {return ok(res, "downloadUri", uri)}).catch((e:any) => {
         console.error(e)
-        return throwError(res, 500, e)
+        return throwError(res, 500, e.message)
     })
     return;
 }
@@ -79,13 +79,20 @@ export const getMovies = async(_req:Request, res:Response) => {
         const movies: IMovie = await Movie.find()
         ok(res, "movies", movies)
     } catch(e) {
-        throwError(res, 500, e)
+        throwError(res, 500, e.message)
     }
 }
 
 // Delete movie by ID specified in params
 export const deleteMovie = async(req: Request, res:Response) => {
     try {
+        const movie: IMovie = await Movie.findById(req.params.id)
+        const lastItem = movie.url.substring(movie.url.lastIndexOf('/') + 1)
+        var params = {  Bucket: 'indiefilm101', Key: lastItem };
+        await s3.deleteObject(params, function(err, data) {
+        if (err) console.log(err, err.stack);  // error
+        else     console.log();                 // deleted
+        });
         const deletedMovie:IMovie = await Movie.findByIdAndDelete(req.params.id)
         ok(res, "deletedMovie", deletedMovie)
     } catch(e) {

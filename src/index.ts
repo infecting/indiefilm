@@ -14,7 +14,7 @@ const app: Application = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser())
-app.set("proxy", 1)
+__prod__ ? null: app.set("proxy", 1)
 app.use(
     cors({
         credentials: true,
@@ -22,7 +22,7 @@ app.use(
     })
 );
 const PORT = process.env.PORT
-connectDatabase()
+connectDatabase();
 
 // Authentication routes
 

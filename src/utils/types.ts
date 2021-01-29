@@ -13,7 +13,7 @@ export interface IMovie extends Document {
     userId: ObjectId,
     title: string
     description: string,
-    url: URL,
+    url: string,
     coverPicture: URL,
     score: number
 }
