@@ -32,7 +32,7 @@ const singleFileUpload = upload.single('file');
 
 export const movieUpload: any = (req:Request, res: Response) => {
     date = Date.now().toString() + ".mp4"
-    let downloadUri = `http://d2fmpilrm1w0l2.cloudfront.net/indiefilm101/${date}`
+    let downloadUri = `https://d24d6i9n6m5ewq.cloudfront.net/${date}`
     console.log(downloadUri)
     return new Promise((resolve, reject) => {
     return singleFileUpload(req, res, (err: any) => {
