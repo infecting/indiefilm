@@ -6,6 +6,7 @@ import cors from 'cors';
 import {__prod__} from './constants'
 import * as auth from './controllers/authentication'
 import * as movies from './controllers/movie'
+import {authenticate} from './middleware/auth'
 
 env.config()
 const app: Application = express()
@@ -41,15 +42,15 @@ app.post("/api/v1/users/refresh_token", auth.refreshToken)
 // Get all movies
 app.get("/api/v1/movies", movies.getMovies);
 // New movie
-app.post("/api/v1/movies/create", movies.createMovie);
+app.post("/api/v1/movies/create", authenticate, movies.createMovie);
 // Upload movie file
-app.post("/api/v1/movies/upload", movies.uploadEndpoint)
+app.post("/api/v1/movies/upload", authenticate, movies.uploadEndpoint)
 // Get movie by id
 app.get("/api/v1/movies/get/:id", movies.getMovie);
 // Delete movie by id
-app.delete("/api/v1/movies/delete/:id", movies.deleteMovie);
+app.delete("/api/v1/movies/delete/:id", authenticate, movies.deleteMovie);
 // Update movie
-app.patch("/api/v1/movies/update/:id")
+app.patch("/api/v1/movies/update/:id", authenticate, movies.updateMovie)
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)

@@ -63,7 +63,9 @@ export const createMovie = async(req:Request, res:Response) => {
             title: req.body.title,
             description: req.body.description,
             url: req.body.url,
-            coverPicture: req.body.coverPicture
+            coverPicture: req.body.coverPicture,
+            bannerPicture: req.body.bannerPicture,
+            score: req.body.score
         })
         // Send back json response
         ok(res, "newMovie", newMovie)

@@ -7,7 +7,8 @@ const movieSchema: Schema = new Schema({
     description: {type:String, required:true},
     score: {type:Number, required:true, default: 0},
     coverPicture: {type:String, required: true},
-    url: {type:String, required:true}
+    url: {type:String, required:true},
+    bannerPicture: {type:String, required: false}
 }, {timestamps:true})
 
 const Movie: Model<IMovie> = model("Movie", movieSchema);
