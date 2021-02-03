@@ -15,10 +15,11 @@ const app: Application = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser())
-__prod__ ? null: app.set("proxy", 1)
+__prod__ ? app.set("proxy", 1): null
 app.use(
     cors({
         maxAge: 86400,
+        allowedHeaders: "*",
         credentials: true,
         origin: __prod__ ? "https://indiefilms.surf":"http://localhost:3000"
     })
