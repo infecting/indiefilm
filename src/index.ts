@@ -18,8 +18,9 @@ app.use(cookieParser())
 __prod__ ? null: app.set("proxy", 1)
 app.use(
     cors({
+        maxAge: 86400,
         credentials: true,
-        origin: __prod__ ? "https://indiefilms.surf":"http://localhost:3000"
+        origin: __prod__ ? "https://indiefilms.surf/":"http://localhost:3000"
     })
 );
 const PORT = process.env.PORT
@@ -44,7 +45,7 @@ app.get("/api/v1/movies", movies.getMovies);
 // New movie
 app.post("/api/v1/movies/create", authenticate, movies.createMovie);
 // Upload movie file
-app.post("/api/v1/movies/upload", authenticate, movies.uploadEndpoint)
+app.post("/api/v1/movies/upload", movies.uploadEndpoint)
 // Get movie by id
 app.get("/api/v1/movies/get/:id", movies.getMovie);
 // Delete movie by id
