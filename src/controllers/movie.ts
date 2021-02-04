@@ -50,7 +50,7 @@ export const movieUpload: any = (req:Request, res: Response) => {
 
 // Controller for the upload endpoint
 export const uploadEndpoint = async(req:Request, res: Response):Promise<void> => {
-    movieUpload(req, res).then((uri: string) => {res.header("access-control-allow-origin", "https://indiefilms.surf"); ok(res, "downloadUri", uri)}).catch((e:any) => {
+    movieUpload(req, res).then((uri: string) => {ok(res, "downloadUri", uri)}).catch((e:any) => {
         console.error(e)
         return throwError(res, 500, e.message)
     })

@@ -45,7 +45,7 @@ app.get("/api/v1/movies", movies.getMovies);
 // New movie
 app.post("/api/v1/movies/create", authenticate, movies.createMovie);
 // Upload movie file
-app.post("/api/v1/movies/upload", movies.uploadEndpoint)
+app.post("/api/v1/movies/upload", authenticate, movies.uploadEndpoint)
 // Get movie by id
 app.get("/api/v1/movies/get/:id", movies.getMovie);
 // Delete movie by id
