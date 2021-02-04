@@ -1,3 +1,4 @@
+import { VerifyCallback } from 'jsonwebtoken';
 import {Document, ObjectId} from 'mongoose';
 
 export interface IUser extends Document {
@@ -17,6 +18,7 @@ export interface IMovie extends Document {
     score: number
 }
 
-export interface jwt extends JsonWebKey {
+export interface jwt extends VerifyCallback {
     id: string
 }
+

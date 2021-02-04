@@ -7,6 +7,7 @@ import multer from 'multer';
 import multerS3 from 'multer-s3'
 import * as env from 'dotenv'
 env.config()
+
 // AWS S3 settings
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -15,10 +16,12 @@ const s3 = new AWS.S3({
 
 let date:string = "";
 
+// Multer upload via s3
 var upload = multer({
     storage: multerS3({
       s3: s3,
       bucket: "indiefilm101",
+      // Content type
       contentType: multerS3.AUTO_CONTENT_TYPE,
       metadata: function (_req, file, cb) {
         cb(null, {fieldName: file.fieldname});
@@ -28,8 +31,11 @@ var upload = multer({
       }
     })
   })
+
+// Upload a single file not array of files
 const singleFileUpload = upload.single('file');
 
+// Upload movie function returns a promise
 export const movieUpload: any = (req:Request, res: Response) => {
     date = Date.now().toString() + ".mp4"
     let downloadUri = `https://d24d6i9n6m5ewq.cloudfront.net/${date}`
@@ -42,6 +48,7 @@ export const movieUpload: any = (req:Request, res: Response) => {
     })
 }
 
+// Controller for the upload endpoint
 export const uploadEndpoint = async(req:Request, res: Response):Promise<void> => {
     movieUpload(req, res).then((uri: string) => {res.header("access-control-allow-origin", "https://indiefilms.surf"); ok(res, "downloadUri", uri)}).catch((e:any) => {
         console.error(e)
