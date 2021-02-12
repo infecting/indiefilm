@@ -20,7 +20,7 @@ app.use(
     cors({
         maxAge: 86400,
         credentials: true,
-        origin: __prod__ ? "https://indiefilms.surf":"http://localhost:3000"
+        origin: __prod__ ? "https://indiefilms.surf": "http://localhost:3000"
     })
 );
 const PORT = process.env.PORT
