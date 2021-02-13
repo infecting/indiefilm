@@ -12,7 +12,8 @@ export let adminauth = async (req:Request, res:Response, next:NextFunction) => {
         let token:string = req.header('Authorization')!.replace('Bearer ', '');
         console.log(token)
         let {id} = verify(token, process.env.ACCESS_TOKEN_SECRET!) as {id: string}
-        let user:IUser = User.findById(id);
+        let user:IUser = await User.findById(id);
+        console.log(user)
         if (!user) {
             throw new Error;
         } else {

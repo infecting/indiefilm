@@ -141,7 +141,7 @@ export const updateMovie = async(req: Request, res: Response) => {
 
 export const getUnconfirmedMovies = async(req:Request, res:Response) => {
     try {
-        const movies: Array<IMovie> = Movie.find({isConfirmed:false})
+        const movies: Array<IMovie> = await Movie.find({isConfirmed:false})
         ok(res, "movies", movies)
     } catch(e) {
         throwError(res, 500, e)
