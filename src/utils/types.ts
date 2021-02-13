@@ -15,7 +15,8 @@ export interface IMovie extends Document {
     description: string,
     url: string,
     coverPicture: URL,
-    score: number
+    score: number,
+    isConfirmed: boolean
 }
 
 export interface jwt extends VerifyCallback {

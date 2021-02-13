@@ -85,7 +85,7 @@ export const createMovie = async(req:Request, res:Response) => {
 export const getMovies = async(_req:Request, res:Response) => {
     try {
         // Find all Movies
-        const movies: IMovie = await Movie.find()
+        const movies: Array<IMovie> = await Movie.find({isConfirmed: true});
         ok(res, "movies", movies)
     } catch(e) {
         throwError(res, 500, e.message)
@@ -123,7 +123,7 @@ export const getMovie = async(req: Request, res: Response) => {
 export const updateMovie = async(req: Request, res: Response) => {
     try {
         if (!req.body.userId || !req.body.title || !req.body.description || !req.body.url || !req.body.coverPicture || !req.body.score) {
-            throwError(res, 400, "Missing parameter.")
+            throw new Error("Missing parameters.")
         }
         const updatedMovie: IMovie = await Movie.findByIdAndUpdate(req.params.id, {
             userId: req.body.userId,
@@ -136,5 +136,23 @@ export const updateMovie = async(req: Request, res: Response) => {
         ok(res, "updatedMovie", updatedMovie);
     } catch (e) {
         throwError(res, 500, e);
+    }
+}
+
+export const getUnconfirmedMovies = async(req:Request, res:Response) => {
+    try {
+        const movies: Array<IMovie> = Movie.find({isConfirmed:false})
+        ok(res, "movies", movies)
+    } catch(e) {
+        throwError(res, 500, e)
+    }
+}
+
+export const confirmMovie = async(req:Request, res: Response) => {
+    try {
+        const movie:IMovie = await Movie.findByIdAndUpdate(req.params.id, { $set: { isConfirmed: true } })
+        ok(res, "confirmedMovie", movie)
+    } catch(e) {
+        throwError(res, 500, e)
     }
 }

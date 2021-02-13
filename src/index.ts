@@ -7,6 +7,7 @@ import {__prod__} from './constants'
 import * as auth from './controllers/authentication'
 import * as movies from './controllers/movie'
 import {authenticate} from './middleware/auth'
+import {adminauth} from './middleware/adminauth';
 
 env.config()
 const app: Application = express()
@@ -52,6 +53,10 @@ app.get("/api/v1/movies/get/:id", movies.getMovie);
 app.delete("/api/v1/movies/delete/:id", authenticate, movies.deleteMovie);
 // Update movie
 app.patch("/api/v1/movies/update/:id", authenticate, movies.updateMovie)
+// Get unconfirmed movies
+app.get("/api/v1/movies/admin", adminauth, movies.getUnconfirmedMovies); 
+// Confirm movie
+app.post("/api/v1/movies/admin/confirm/:id", adminauth, movies.confirmMovie);
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
